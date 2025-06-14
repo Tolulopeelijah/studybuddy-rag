@@ -1,54 +1,55 @@
 # StudyBuddy - AI-Powered Study Material Assistant
 
-StudyBuddy is a lightweight assistant that helps you process and search through PDF study materials using AI. It uses language models, embeddings, and vector databases to make academic research and studying more efficient.
+StudyBuddy is a lightweight AI-powered assistant designed to help you process and explore PDF study materials intelligently. Beyond simple search, it automatically generates 5 open-ended and 5 closed-ended questions that cover the core content of your uploaded materials. Users can answer one question at a time, after which StudyBuddy evaluates the response highlighting what was accurate, what should have been added or avoided, and common pitfalls to watch out for. It leverages language models, embeddings, and vector databases to create an interactive, feedback-driven learning experience that boosts study effectiveness.
 
-Features
+## Features
 
-Load and chunk large PDF study materials
+- Load and chunk large PDF study materials using PyPDFLoader and RecursiveCharacterTextSplitter  
+- Generate vector embeddings with HuggingFace’s all-MiniLM-L6-v2 model  
+- Store and search documents efficiently using ChromaDB  
+- Retrieve relevant content using semantic search and top-k similarity matching  
+- Generate 5 open and 5 closed questions from study materials using an LLM  
+- Evaluate user answers with AI feedback on accuracy, relevance, and pitfalls  
+- Supports LLMs like LLaMA3 via Groq API for fast completions  
 
-Convert content to vector embeddings using HuggingFace models
+## Tech Stack
 
-Store and search documents with ChromaDB
+- `LangChain`
+- `ChromaDB`
+- `PyPDFLoader` (from LangChain Community)
+- `HuggingFace Embeddings`
+- `ChatGroq`
+- `Torch`
+- `Python 3.10+`
 
-Query relevant content using semantic search
+## Project Structure
+```
+├─ data/
+├── notebooks/
+├── research_db/
+├── environment.yml
+├── LICENSE
+├── README.md
+├── .env
+└── .gitignore
+```
 
-Supports LLMs like LLaMA3 via Groq API
 
-Tech Stack
-
-LangChain
-
-ChromaDB
-
-PyPDFLoader (LangChain Community)
-
-HuggingFace Embeddings
-
-ChatGroq
-
-Torch
-
-Python 3.10+
-
-Project Structure
-
-.├── data/                   # Folder for your PDF files├── notebook.ipynb          # Main notebook for running the assistant├── studybuddy/             # (Optional) Python modules if extracted├── environment.yml         # Conda environment export└── README.md               # You're here
-
-Setup Instructions
+## Setup Instructions
 
 1. Clone the Repo
 
-git clone https://github.com/yourusername/studybuddy.gitcd studybuddy
+```git clone https://github.com/yourusername/studybuddy.gitcd studybuddy```
 
 2. Create the Environment
 
 If you're using conda:
 
-conda env create -f environment.ymlconda activate studybuddy
+```conda env create -f environment.ymlconda activate studybuddy```
 
 Or with pip:
 
-pip install -r requirements.txt
+```pip install -r requirements.txt```
 
 3. Configure .env
 
@@ -56,33 +57,50 @@ Create a .env file in the root directory:
 
 GROQ_API_KEY=your_groq_api_key
 
-How It Works
+## How It Works
 
-PDF Loading – via PyPDFLoader
+- PDF Loading – Study materials are loaded from PDF files using PyPDFLoader from LangChain Community tools.
 
-Text Chunking – using RecursiveCharacterTextSplitter
+- Text Chunking – Each document is split into overlapping, searchable chunks using RecursiveCharacterTextSplitter to preserve context and optimize semantic search.
 
-Vector Embedding – with HuggingFaceEmbeddings
+- Vector Embedding – Chunks are converted into vector embeddings using HuggingFace’s all-MiniLM-L6-v2 model, optimized for retrieval tasks.
 
-Storage – into ChromaDB as vector documents
+- Storage – Embeddings, along with their metadata, are stored in a ChromaDB collection for fast and efficient similarity search.
 
-Query – ask questions and retrieve matching study material chunks
+- Question Generation – The system generates 5 open-ended and 5 closed-ended questions based on the uploaded materials using an LLM.
 
-Sample Usage
+- User Interaction – The user answers one question at a time. After each answer, the system evaluates the response and gives detailed feedback:
 
-query = "What is lexical scoping?"results = search_material_db(query, collection, embeddings)
+  - What should have been included
 
-for chunk in results:print(chunk["title"], "->", chunk["content"][:200])
+  - What should be avoided
 
-Status
+  - Common pitfalls and how to improve
+
+## Sample Usage
+```
+answer, sources = buddyassistant(
+    "Programming language design",
+    collection, 
+    embeddings, 
+    llm
+)
+
+for ind, each in enumerate(answer):
+    print(f"Question {ind + 1}: {each['question']}", end = '\n\n')
+    print(f"Your answer: {each['answer']}")
+    print(f"AI's Evaluation: {each['evaluation']}")
+    print("=" * 150, '\n')
+)
+```
 
 
 
-Author
+## Author
 
-Built by Your NameFeel free to reach out with questions or ideas for collaboration.
+Built by Your Tolulope Elijah free to reach out with questions or ideas for collaboration.
 
-License
+## License
 
 This project is licensed under the MIT License – see the LICENSE file for details.
 
